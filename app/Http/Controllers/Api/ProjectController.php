@@ -12,7 +12,7 @@ class ProjectController extends Controller
     public function index()
     {
 
-        $projects = Post::paginate(5);
+        $projects = Post::with('category')->paginate(5);
         $categories = Category::all();
         return response()->json([
             'success' => true,
@@ -24,6 +24,19 @@ class ProjectController extends Controller
         ]);
 
     }
+
+    public function show($slug)
+    {
+
+        $projects = Post::with('category')->where('slug', $slug)->first();
+        return response()->json([
+            'success' => true,
+            'data' => $projects,
+            
+        ]);
+
+    }
+
     public function projectsCategory(Category $category)
     {
         $projects = Post::where('category_id', $category->id)->get();
